@@ -25,14 +25,7 @@ python -m venv venv
 source venv/bin/activate   # Mac/Linux
 venv\Scripts\activate      # Windows
 
-
-STEP 3 - INSTALL DEPENDANCIES
-
-
-  pip install -r requirements.txt
-
-  
-STEP 4 -RUN THE APPLICATION
+STEP 3 -RUN THE APPLICATION
 
 
   flask run
