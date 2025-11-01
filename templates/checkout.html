@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+   <h1>YOUR CART</h1>
+
+   {% if cart %}
+   <table class="table table-striped align-middle">
+    <thead>
+        <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Description</th>
+        <th>Size</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart %}
+        <tr>
+            <td>
+                <a href="{{ url_for('product_detail', product_id =item.id)}}">
+                <img src="{{ url_for('static', filename='img/' + item.image) }}" alt="{{ item.name }}" style="max-height: 60px;"
+                class="product-thumb">
+                </a>
+            </td>
+            <td>
+                <a href="{{ url_for('product_detail', product_id =item.id)}}"class="product-link"> {{ item.name }}</a>
+            </td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price }}</td>
+            <td>${{ '%.2f' | format(item.price_value * item.quantity) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+   </table> 
+   
+    {% else %}
+    <p>Your cart is empty. 
+        
+        <a href="{{ url_for('shop_page') }}">Continue shopping</a></p>
+    {% endif %}
+</div>
+
+<hr>
+<h3>Total: ${{ total }}</h3>
+
+
+<div class="checkout-form mt-5">
+    <h3>Customer Info</h3>
+    <form action="/confirm" method="post">
+        <input type="text" name="name" placeholder="Full Name" class="form-control mb-3" required>
+        <input type="email" name="email" placeholder="Email Address" class="form-control mb-3" required>
+        <input type="text" name="address" placeholder="Shipping Address" class="form-control mb-3" required>
+
+        <button type="submit" class="btn-retro">Place order</button>
+    </form>
+</div>
+{% endblock %}

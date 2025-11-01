@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} SYNA{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='syna.css') }}">
+</head>
+<body>
+
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" href="{{ url_for('home') }}" class="glitch-nav">9WORDS</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">HOME</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('checkout') }}">checkout</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('shop_page') }}">SHOP</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">ABOUT</a></li>
+    </ul>
+  </div>
+</nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 Ugllylabs. All rights reserved</p>
+    </footer>
+    
+</body>
+</html>

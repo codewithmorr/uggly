@@ -1,0 +1,343 @@
+ 
+       @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Staatliches&display=swap');
+       body{
+        margin: 0;
+        background:linear-gradient(135deg , #ff8ba7, #8bd3ff);
+        font-family: 'Press Start 2P', cursive;
+        color:#111;
+        text-align: center;
+        }
+        nav{
+              background: #000;
+              padding: 10px 0;
+        }
+        .nav-link-custom{
+              transition: color 0.3s ease;
+        }
+
+        .nav-link-custom:hover{
+              color: pink !important;
+        }
+        .nav-link-custom.active{
+              color: pink !important;
+              font-weight: bold;
+        }
+        .navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+  color: pink !important;
+}
+/* Kill Bootstrap's background on hover */
+nav a:hover {
+  background-color: transparent !important; 
+}
+
+/* Base nav links */
+nav a {
+  color: white; 
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  background-color: transparent !important;
+}
+nav a:first-child{
+       color: #ff8ba7 !important;
+}
+
+
+/* brand link (first link in the nav) */
+nav a:first-child:hover {
+  color: pink !important;
+  text-shadow: 0 0 8px pink, 0 0 15px hotpink;
+  background-color: transparent !important;
+}
+
+/* Other nav links */
+nav a:not(:first-child):hover {
+  color: pink !important;
+  text-shadow: none;
+}
+
+       .hero{
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+       }
+       h1{
+        font-size: 3rem;
+        margin-top: 20vh;
+        text-shadow: 3px 3px #000;
+       }
+       p{
+        font-family: 'Staatliches', cursive;
+        font-size: 1.2rem;
+        margin: 20px 0 40px 0;
+        text-shadow: 2px;
+       }
+       a{
+        display: inline-block;
+        margin: 15px;
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+       }
+       a:hover{
+        background: #fff;
+        color: #000;
+       }
+       .btn-retro{
+              display: inline-block;
+              margin: 15px;
+              padding: 10px 20px;
+              background: #000;
+              color: #fff;
+              text-decoration: none;
+              text-transform: uppercase;
+              border: 3px solid #fff;
+              box-shadow: 4px 4px #ff8ba7;
+              transition: all 0.2s ease-in-out;
+       }
+
+       .btn-retro:hover{
+              background: #fff;
+              color: #000;
+              box-shadow: 4px 4px #8bd3ff;
+       }
+       footer{
+              text-align: center;
+              padding: 1rem;
+              background-color: #111;
+              color: #ff8ba7;
+              width: 100%;
+              transition:color 0.2s ease, color 0.2s ease;
+       }
+       footer:hover{
+              color: #8bd3ff;
+       }
+
+
+       .product-card{
+              background: #111;
+              border: 3px solid #fff;
+              box-shadow: 4px 4px #ff8ba7;
+              padding: 20px;
+              text-align: center;
+              border-radius: 10px;
+              transition: transform 0.2s ease-in-out box-shadow 0.2s ease-in-out;
+
+       }
+       .product-card:hover{
+              transform: translateY(-5px);
+              box-shadow: 6px 6px #8bd3ff;
+       }
+
+       .product-card img{
+              width: 100%;
+              height: 250px;
+              object-fit: cover;
+              margin-bottom: 15px;
+              border-radius: 5px;
+       }
+
+       .product-card h2{
+              font-family: 'Press Start 2P', cursive;
+              font-size: 1rem;
+              margin-bottom:10px;
+              color: #fff;
+       }
+
+       .product-card .price{
+              font-family: 'straatliches', cursive;
+              font-size: 1.2rem;
+              color: #ff8ba7;
+              margin-bottom: 15px;
+              transform: color 0.3s ease , color 0.3s ease;
+       }
+       .product-card .price:hover{
+              color: #8bd3ff;
+       }
+
+       .cart-row{
+              background: #111;
+              border: 2px solid #fff;
+              box-shadow: 3px 3px #ff8ba7;
+              transition: transform 0.2s ease-in-out;
+       }
+
+       .cart-row:hover{
+              transform: translatex(5px);
+              box-shadow: 5px 5px #8bd3ff;
+       }
+       .cart-img{
+              width: 80px;
+              height: 80px;
+              object-fit: cover;
+              border-radius: 5px;
+       }
+
+       .cart-details h5{
+              color: #fff;
+              font-size: 1rem;
+       }
+
+       .cart-details p{
+              color: #fff;
+              font-size: 1rem;
+       }
+       
+       .cart-details p{
+              color: #bbb;
+              font-size: 0.9rem;
+       }
+
+
+       .cart-price{
+              color: #ff8ba7;
+              font-size: 1.2rem;
+              font-weight: bold;
+       }
+       .cart-price strong{
+              color: #fff;
+       }
+       .cart-price:hover{
+              color: #8bd3ff;
+       }
+
+       .product-thumb{
+              max-height: 60px;
+              border-radius: 8px;
+              transition: transform 0.2s ease-in-out;
+       }
+       .product-thumb:hover{
+              transform: scale(1.1);
+       }
+
+       .product-link{
+              color: black;
+              text-decoration: none;
+              font-weight: 600;
+              transition: color 0.3s ease-in-out, text-decoration 0.2s;
+              background-color: transparent;
+       }
+
+       .product-link:hover{
+              color: #ff8ba7;
+              text-decoration: underline;
+       }
+    
+
+      .glitch-brand {
+    font-size: 6rem;
+    font-weight: bold;
+    color: #ff8ba7;
+    position: relative;
+    display: inline-block;
+    text-shadow: 2px 2px #111;
+    animation: flicker 2s infinite;
+}
+
+.glitch-brand::before,
+.glitch-brand::after {
+    content: "9 W O R D S";  /* your brand name */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+    color: #0ff;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch 2s infinite linear alternate-reverse;
+}
+
+.glitch-brand::after {
+    color: #f0f;
+    animation-delay: 1s;
+}
+
+@keyframes glitch {
+    0% { clip: rect(20px, 9999px, 70px, 0); transform: translate(2px, -2px); }
+    20% { clip: rect(50px, 9999px, 100px, 0); transform: translate(-2px, 2px); }
+    40% { clip: rect(20px, 9999px, 50px, 0); transform: translate(-1px, 0); }
+    60% { clip: rect(60px, 9999px, 120px, 0); transform: translate(1px, -1px); }
+    80% { clip: rect(10px, 9999px, 80px, 0); transform: translate(-3px, 1px); }
+    100% { clip: rect(40px, 9999px, 90px, 0); transform: translate(2px, 2px); }
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0; }
+}
+
+
+         .glitch {
+    font-size: 6rem;
+    font-weight: bold;
+    color: #ff8ba7;
+    position: relative;
+    display: inline-block;
+    text-shadow: 2px 2px #111;
+    animation: flicker 2s infinite;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: "404";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+    color: #0ff;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch 2s infinite linear alternate-reverse;
+  }
+
+  .glitch::after {
+    color: #f0f;
+    animation-delay: 1s;
+  }
+
+  @keyframes glitch {
+    0% { clip: rect(20px, 9999px, 70px, 0); transform: translate(2px, -2px); }
+    20% { clip: rect(50px, 9999px, 100px, 0); transform: translate(-2px, 2px); }
+    40% { clip: rect(20px, 9999px, 50px, 0); transform: translate(-1px, 0); }
+    60% { clip: rect(60px, 9999px, 120px, 0); transform: translate(1px, -1px); }
+    80% { clip: rect(10px, 9999px, 80px, 0); transform: translate(-3px, 1px); }
+    100% { clip: rect(40px, 9999px, 90px, 0); transform: translate(2px, 2px); }
+  }
+
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0; }
+  }
+
+  .glitch-nav {
+    font-size: 1.5rem;       /* smaller than main page */
+    font-weight: bold;
+    color: #ff8ba7;
+    position: relative;
+    display: inline-block;
+    text-shadow: 1px 1px #111;
+    animation: flicker 2s infinite;
+}
+
+.glitch-nav::before,
+.glitch-nav::after {
+    content: "9 W O R D S";  /* your brand name */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+    color: #0ff;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch 2s infinite linear alternate-reverse;
+}
+
+.glitch-nav::after {
+    color: #f0f;
+    animation-delay: 1s;
+}
