@@ -30,6 +30,6 @@ STEP 3 -RUN THE APPLICATION
 
   flask run
  or 
- python.app.py
+ python app.py
 
    
