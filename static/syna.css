@@ -62,7 +62,7 @@ nav a:not(:first-child):hover {
               display: flex;
               flex-direction: column;
               justify-content: center;
-              align-items: center;
+              align-items: right;
        }
        h1{
         font-size: 3rem;

@@ -34,7 +34,7 @@
             <td>{{ item.size }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
-            <td>${{ '%.2f' | format(item.price_value * item.quantity) }}</td>
+            <td>${{ '%.2f' | format(item.get('price', 0)|float * item.get('quantity', 1)|int) }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmation{% endblock %}
+<div class="container my-5">
+    <h1>Thank you, {{ name }}!</h1>
+    <p>Your order has been confirmed.</p>
+    <p>shipping to {{ address }}</p>
+    <p>A confirmation email has been sent to {{ email }}.</p>
+
+    <h3>Order Details</h3>
+    <ul>
+        {% for item in cart%}
+        <li>{{ item.quantity}} x {{ item.name }} {{item.size}} - ${{ "%.2f"|format(item.price_value * item.quantity) }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% block content %}
