@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+ <h1>Admin Dashboard</h1>
+ <a href="{{url_for('admin_add')}}">add product</a>
+ <a href="{{url_for('admin_logout')}}">logout</a>
+
+ <table border="1">
+    <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for product in products %}
+    <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>
+            
+            <a href="{{ url_for('admin_edit', product_id=product.id) }}">Edit</a>
+
+
+           <form action="{{url_for('admin_delete', product_id=product.id)}}" method="POST">
+
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+ </table>
+</div>
+{% endblock %}

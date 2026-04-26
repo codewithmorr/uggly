@@ -341,3 +341,19 @@ nav a:not(:first-child):hover {
     color: #f0f;
     animation-delay: 1s;
 }
+
+
+
+
+.admin-container {
+    width: 60%;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+.admin-container table{
+       width: 100%;
+       border-collapse: collapse;
+       margin-top: 20px;
+}

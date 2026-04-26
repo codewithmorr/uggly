@@ -42,6 +42,100 @@ def product_detail(product_id):
 
     return render_template('product_detail.html', product=product)
 
+# admin CRUD routes (for simplicity, no authentication)
+@app.route('/admin/login', methods=["GET","POST"])
+def admin_login():
+    if request.method =="POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username =="admin" and password =="1234":
+            session["admin"] = True
+            return redirect(url_for("admin_dashboard"))
+        else:
+            return"Invalid credentials"
+    return render_template("admin_login.html")
+
+
+# admin logout
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop("admin", None)
+    return redirect(url_for("home"))
+
+# admin helper and protection
+
+def is_admin():
+    return session.get("admin")
+
+# read ADMIN DASHBOARD
+@app.route('/admin')
+def admin_dashboard():
+    if not is_admin():
+        abort(403)
+
+    cursor.execute("SELECT * FROM products")
+    products = cursor.fetchall()
+    return render_template('admin_dashboard.html', products=products)
+
+
+# addproduct 
+@app.route('/admin/add', methods =["GET", "POST"])
+def admin_add():
+    if not is_admin():
+        return redirect(url_for("admin_login"))
+    
+    if request.method == "POST":
+        name = request.form.get('name')
+        price = request.form.get('price')
+        image = request.form.get('image')
+        description = request.form.get('description')
+       
+        cursor.execute(
+           "INSERT INTO products(name, price,  image, description) VALUES(%s , %s , %s , %s)",
+           (name, price, image, description)
+       )
+        db.commit()
+
+        return redirect(url_for("admin_dashboard"))
+    
+    return render_template("admin_add.html")
+
+# update product
+@app.route('/admin/edit/<int:product_id>', methods=["GET", "POST"])
+def admin_edit(product_id):
+    if not is_admin():
+        return redirect(url_for("admin_login"))
+
+    cursor.execute("SELECT * FROM products WHERE id = %s", (product_id,))
+    product = cursor.fetchone()
+
+    if request.method == "POST":
+        name = request.form.get('name')
+        price = request.form.get('price')
+        image = request.form.get('image')
+        description = request.form.get('description')
+
+        cursor.execute(
+            "UPDATE products SET name=%s, price=%s, image=%s, description=%s WHERE id=%s",
+            (name, price, image, description, product_id)
+        )
+        db.commit()
+
+        return redirect(url_for("admin_dashboard"))
+
+    return render_template("admin_edit.html", product=product)
+
+# delete product
+@app.route('/admin/delete/<int:product_id>', methods=["POST"])
+def admin_delete(product_id):
+    if not is_admin():
+        return redirect(url_for("admin_login"))
+    
+    cursor.execute("DELETE FROM products WHERE id = %s", (product_id,))
+    db.commit()
+
+    return redirect(url_for("admin_dashboard"))
 
 # -------------------- CART --------------------
 
@@ -139,4 +233,4 @@ def page_not_found(e):
 # -------------------- RUN --------------------
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
