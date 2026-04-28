@@ -49,11 +49,11 @@ def admin_login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        if username =="admin" and password =="1234":
+        if username =="HUSH&BLUSH" and password =="within":
             session["admin"] = True
             return redirect(url_for("admin_dashboard"))
         else:
-            return"Invalid credentials"
+            return"Sorry , employees only!"
     return render_template("admin_login.html")
 
 
