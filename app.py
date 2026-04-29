@@ -42,7 +42,7 @@ def product_detail(product_id):
 
     return render_template('product_detail.html', product=product)
 
-# admin CRUD routes (for simplicity, no authentication)
+# admin CRUD routes
 @app.route('/admin/login', methods=["GET","POST"])
 def admin_login():
     if request.method =="POST":
