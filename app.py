@@ -20,9 +20,6 @@ def home():
     return render_template('syna.html')
 
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 
 @app.route('/shop')
@@ -53,7 +50,7 @@ def admin_login():
             session["admin"] = True
             return redirect(url_for("admin_dashboard"))
         else:
-            return"Sorry , employees only!"
+            return "employees only", 403
     return render_template("admin_login.html")
 
 
@@ -90,10 +87,11 @@ def admin_add():
         price = request.form.get('price')
         image = request.form.get('image')
         description = request.form.get('description')
-       
+        stock = request.form.get('stock')
+
         cursor.execute(
-           "INSERT INTO products(name, price,  image, description) VALUES(%s , %s , %s , %s)",
-           (name, price, image, description)
+           "INSERT INTO products(name, price,  image, description, stock) VALUES(%s , %s , %s , %s , %s)",
+           (name, price, image, description, stock)
        )
         db.commit()
 
@@ -114,11 +112,12 @@ def admin_edit(product_id):
         name = request.form.get('name')
         price = request.form.get('price')
         image = request.form.get('image')
+        stock = request.form.get('stock')
         description = request.form.get('description')
 
         cursor.execute(
-            "UPDATE products SET name=%s, price=%s, image=%s, description=%s WHERE id=%s",
-            (name, price, image, description, product_id)
+            "UPDATE products SET name=%s, price=%s, image=%s, stock=%s, description=%s WHERE id=%s",
+            (name, price, image, stock, description, product_id)
         )
         db.commit()
 
@@ -233,4 +232,4 @@ def page_not_found(e):
 # -------------------- RUN --------------------
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

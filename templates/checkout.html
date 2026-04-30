@@ -12,7 +12,6 @@
         <th>Image</th>
         <th>Product</th>
         <th>Description</th>
-        <th>Size</th>
         <th>Quantity</th>
         <th>Price</th>
         <th>Subtotal</th>
@@ -31,10 +30,9 @@
                 <a href="{{ url_for('product_detail', product_id =item.id)}}"class="product-link"> {{ item.name }}</a>
             </td>
             <td>{{ item.description }}</td>
-            <td>{{ item.size }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
-            <td>${{ '%.2f' | format(item.get('price', 0)|float * item.get('quantity', 1)|int) }}</td>
+            <td>Kes {{ '%.2f' | format(item.get('price', 0)|float * item.get('quantity', 1)|int) }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -48,7 +46,7 @@
 </div>
 
 <hr>
-<h3>Total: ${{ total }}</h3>
+<h3>Total: kes {{ total }}</h3>
 
 
 <div class="checkout-form mt-5">
