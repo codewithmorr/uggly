@@ -8,11 +8,29 @@
  <a href="{{url_for('admin_add')}}">add product</a>
  <a href="{{url_for('admin_logout')}}">logout</a>
 
+ <div class="stats-grid">
+
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <p>Kes {{ '%.2f' | format(total_revenue) }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Products</h3>
+        <p>{{ total_products }}</p>
+    </div>
+
+    
+
+</div>
+
  <table border="1">
     <tr>
         <th>Product Name</th>
         <th>Price</th>
         <th>Stock</th>
+        <th>Sold</th>
+        <th>Revenue</th>
         <th>Actions</th>
     </tr>
 
@@ -20,10 +38,18 @@
     <tr>
         <td>{{ product.name }}</td>
         <td>{{ product.price }}</td>
-        <td>{{ product.stock }}</td>
         <td>
+            {%if product.stock < 5%}
+            <span style="color: red;font-weight: bold;">{{ product.stock }} (LOW)</span>
+            {% else %}
+            {{ product.stock }}
+            {% endif %}
+        </td>
+    <td>{{product.sold}}</td>
+    <td>{{ '%.2f' | format(product.sold * product.price) }}</td>
             
-            <a href="{{ url_for('admin_edit', product_id=product.id) }}">Edit</a>
+          <td>
+              <a href="{{ url_for('admin_edit', product_id=product.id) }}">Edit</a>
 
 
            <form action="{{url_for('admin_delete', product_id=product.id)}}" method="POST">
@@ -31,8 +57,11 @@
                 <button type="submit">Delete</button>
             </form>
         </td>
+    
     </tr>
     {% endfor %}
  </table>
 </div>
+<hr>
+
 {% endblock %}

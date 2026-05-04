@@ -1,3 +1,5 @@
+
+
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 import mysql.connector
 
@@ -73,8 +75,18 @@ def admin_dashboard():
 
     cursor.execute("SELECT * FROM products")
     products = cursor.fetchall()
-    return render_template('admin_dashboard.html', products=products)
+    # total units sold
+    total_sold = sum(p["sold"] for p in products)
 
+    # total product revenue
+    total_revenue = sum(p["sold"] * float(p["price"]) for p in products)
+
+    total_products = len(products)
+    low_stock = [p for p in products if p["stock"] < 5]
+
+    return render_template('admin_dashboard.html', products=products, 
+    total_sold=total_sold, total_revenue=total_revenue, total_products=total_products, 
+    low_stock=low_stock)
 
 # addproduct 
 @app.route('/admin/add', methods =["GET", "POST"])
@@ -148,35 +160,89 @@ def add_to_cart(product_id):
     cursor.execute("SELECT * FROM products WHERE id = %s", (product_id,))
     product = cursor.fetchone()
 
-    if product:
-        quantity = int(request.form.get("quantity", 1))
-        size = request.form.get("size")
+    if not product:
+        return redirect(url_for("shop_page"))
 
-        # convert DB price safely (DECIMAL → float)
-        price = float(product["price"])
+    quantity = int(request.form.get("quantity", 1))
+    size = request.form.get("size")
 
-        # check if already in cart (same id + size)
-        existing_item = next(
-            (item for item in cart if item["id"] == product_id and item["size"] == size),
-            None
-        )
+    # stock control
+    if quantity > product["stock"]:
+        return render_template("product_detail.html",
+                               product=product,
+                               error="Order cannot be placed - not enough stock available")
 
-        if existing_item:
-            existing_item["quantity"] += quantity
-        else:
-            cart.append({
-                "id": product["id"],
-                "name": product["name"],
-                "price": float(product["price"]),  # store as float ✅
-                "image": product["image"],
+    # convert DB price safely (DECIMAL → float)
+    price = float(product["price"])
+
+    # check if already in cart (same id + size)
+    existing_item = next(
+        (item for item in cart if item["id"] == product_id and item["size"] == size),
+        None
+    )
+
+    existing_qty = existing_item["quantity"] if existing_item else 0
+    new_total_qty = existing_qty + quantity
+
+    if new_total_qty > product["stock"]:
+        return render_template("product_detail.html",
+                               product = product,
+                               error=f"Only{product['stock']} available in stock")
+    if existing_item:
+        existing_item["quantity"] = new_total_qty
+    else:
+        cart.append({
+            "id": product["id"],
+            "name": product["name"],
+            "price": float(product["price"]),
+            "image": product["image"],
                 "description": product["description"],
                 "quantity": quantity,
-                "size": size
+                "stock": product["stock"]
             })
 
     session["cart"] = cart
     return redirect(url_for("checkout"))
+@app.route('/cart/increase/<int:product_id>')
+def increase_cart(product_id):
+    cart = session.get("cart",[])
 
+    for item in cart:
+        if item["id"] == product_id:
+            item["quantity"]+=1
+
+
+            # stop increasing if it exceeds stock
+            if item["quantity"] > item["stock"]:
+                return redirect(url_for("checkout"))
+            break
+    session["cart"] = cart
+    return redirect(url_for("checkout"))
+# decrease item quantity in cart
+@app.route('/cart/decrease/<int:product_id>')
+def decrease_cart(product_id):
+    cart = session.get("cart",[])
+
+    for item in cart:
+        if item["id"] == product_id:
+            if item["quantity"] > 1:
+                item["quantity"]-=1
+            else:
+                cart.remove(item)
+            break
+    session["cart"] = cart
+    return redirect(url_for("checkout"))
+
+@app.route('/cart/remove/<int:product_id>')
+def remove_from_cart(product_id):
+    cart = session.get("cart",[])
+
+    cart = [
+        item for item in cart
+        if not (item["id"] == product_id)
+    ]
+    session["cart"] = cart
+    return redirect(url_for("checkout"))
 
 @app.route('/checkout')
 def checkout():
@@ -206,8 +272,36 @@ def confirm_order():
 
     name = request.form.get("name")
     email = request.form.get("email")
+    phone = request.form.get("phone")
     address = request.form.get("address")
 
+    # calculattion of total
+    total = sum(float(item["price"]) * int(item["quantity"]) for item in cart)
+
+    #  SAVE ORDER
+    cursor.execute("""
+        INSERT INTO orders (name, email, phone, total, status)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (name, email, phone, total, "pending"))
+
+    order_id = cursor.lastrowid  
+
+    #  REDUCE STOCK
+    for item in cart:
+        cursor.execute("""
+            UPDATE products
+            SET stock = stock - %s,
+                sold = sold + %s
+            WHERE id = %s
+        """, (
+            item["quantity"],
+            item["quantity"],
+            item["id"]
+        ))
+
+    db.commit()
+
+    #  CLEAR CART
     session.pop('cart', None)
 
     return render_template(
@@ -215,7 +309,10 @@ def confirm_order():
         name=name,
         email=email,
         address=address,
-        cart=cart
+        phone=phone,
+        cart=cart,
+        total=total,
+        order_id=order_id
     )
 
 
@@ -232,4 +329,4 @@ def page_not_found(e):
 # -------------------- RUN --------------------
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

@@ -15,6 +15,7 @@
         <th>Quantity</th>
         <th>Price</th>
         <th>Subtotal</th>
+        <th>  </th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +31,27 @@
                 <a href="{{ url_for('product_detail', product_id =item.id)}}"class="product-link"> {{ item.name }}</a>
             </td>
             <td>{{ item.description }}</td>
-            <td>{{ item.quantity }}</td>
+            <td>
+                <div class="qty-controls">
+<!-- minus -->
+                    <a class="qty-btn" href="{{url_for('decrease_cart', product_id= item.id)}}" class="btn btn-sm">-</a>
+                    <span>{{ item.quantity }}</span>
+<!-- plus -->
+                  {% if item.quantity >= item.get('stock', 0) %}
+                <span>Max</span>
+                    {%else%}
+<a class="qty-btn" href="{{url_for('increase_cart', product_id= item.id)}}" class="btn btn-sm">+</a>
+                    {% endif %}
+
+
+                </div>
+            </td>
             <td>{{ item.price }}</td>
-            <td>Kes {{ '%.2f' | format(item.get('price', 0)|float * item.get('quantity', 1)|int) }}</td>
+            <td>Kes {{ '%.2f' | format(item.price|float * item.quantity|int) }}</td>
+            <td>
+                <!-- remove -->
+                    <a href="{{url_for('remove_from_cart', product_id= item.id)}}" class="btn btn-sm btn-outline-danger ms-3">Remove</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -51,10 +70,11 @@
 
 <div class="checkout-form mt-5">
     <h3>Customer Info</h3>
-    <form action="/confirm" method="post">
+    <form action="{{url_for('confirm_order')}}" method="post">
         <input type="text" name="name" placeholder="Full Name" class="form-control mb-3" required>
         <input type="email" name="email" placeholder="Email Address" class="form-control mb-3" required>
         <input type="text" name="address" placeholder="Shipping Address" class="form-control mb-3" required>
+        <input type="text" name="phone" placeholder="Phone Number" class="form-control mb-3" required>
 
         <button type="submit" class="btn-retro">Place order</button>
     </form>

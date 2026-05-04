@@ -8,13 +8,19 @@
         {% for product in products %}
         <div class="col-md-4 mb-4">
             <div class="product-card">
-                <a href="{{ url_for('product_detail', product_id=product.id) }}"></a>
+
+<!-- image -->
                 <img src="{{url_for('static', filename='img/' +product.image)}}" alt="{{product.name}}">
                 </a>
-                <a href="{{ url_for('product_detail', product_id=product.id) }}"></a>
-                <h2>{{ product.name }}</h2>
-                </a>
+<!-- name -->                
+                    <h2>{{ product.name }}</h2>
                 <p class="price">{{ product.price }}</p>
+<!-- Stock Status -->
+                {% if product.stock <= 0 %}
+                    <p style="color:red; font-weight:bold;">Out of Stock</p>
+                {%else%}
+
+                {% endif %}
                 <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-retro">select options</a>
             </div>
         </div>

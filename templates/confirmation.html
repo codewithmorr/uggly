@@ -1,16 +1,31 @@
 {% extends "base.html" %}
-{% block title %}Order Confirmation{% endblock %}
+
+{% block title %}Order Confirmed{% endblock %}
+
+{% block content %}
 <div class="container my-5">
-    <h1>Thank you, {{ name }}!</h1>
-    <p>Your order has been confirmed.</p>
-    <p>shipping to {{ address }}</p>
-    <p>A confirmation email has been sent to {{ email }}.</p>
+    <h1>Order Confirmed</h1>
+
+    <p>Thank you, <strong>{{ name }}</strong>!</p>
+
+    <p>Your order has been received and will be processed shortly.</p>
 
     <h3>Order Details</h3>
+
     <ul>
-        {% for item in cart%}
-        <li>{{ item.quantity}} x {{ item.name }} {{item.size}} - ${{ "%.2f"|format(item.price_value * item.quantity) }}</li>
+        {% for item in cart %}
+        <li>
+            {{ item.name }} (x{{ item.quantity }}) - ${{ item.price }}
+        </li>
         {% endfor %}
     </ul>
+
+    <h4>Delivery Info</h4>
+    <p>Email: {{ email }}</p>
+    <p>Address: {{ address }}</p>
+
+    <p>Payment will be processed via M-Pesa to: <strong>{{ phone }}</strong></p>
+
+    <a href="{{ url_for('shop_page') }}">Back to Shop</a>
 </div>
-{% block content %}
+{% endblock %}
