@@ -7,15 +7,16 @@
  <h1>Admin Dashboard</h1>
  <a href="{{url_for('admin_add')}}">add product</a>
  <a href="{{url_for('admin_logout')}}">logout</a>
+ <a href="{{url_for('admin_users')}}">Users</a>
 
- <div class="stats-grid">
+ <div>
 
-    <div class="card">
+    <div>
         <h3>Total Revenue</h3>
         <p>Kes {{ '%.2f' | format(total_revenue) }}</p>
     </div>
 
-    <div class="card">
+    <div>
         <h3>Total Products</h3>
         <p>{{ total_products }}</p>
     </div>
@@ -24,7 +25,7 @@
 
 </div>
 
- <table border="1">
+ <table class="table table-light table-striped mt-3">
     <tr>
         <th>Product Name</th>
         <th>Price</th>

@@ -1,0 +1,18 @@
+{%extends "base.html"%}
+{% block content %} Edit Profile {% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <h2>Edit profile</h2>
+
+    <form method="post">
+        <input name="username" value="{{ user.username }}" class="form-control mb-2">
+        <input name="email" value="{{ user.email }}" class="form-control mb-2">
+
+
+
+       <button class="btn-retro">Save</button>
+    </form>
+</div>
+{% endblock %}

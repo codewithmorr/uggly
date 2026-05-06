@@ -1,0 +1,47 @@
+{%extends "base.html"%}
+
+{% block title%}profile{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+    <h1 >Welcome, {{ user.username }}!</h1>
+    <p>Email: {{ user.email }}</p>
+    <p>Member since: {{ user.created_at }}</p>
+    <hr>
+
+    <h3>Total Spent: ${{ "%.2f"|format(total_spent) }}</h3>
+
+    <h3 class="mt-4">Your Orders</h3>
+
+    {% if orders %}
+    <table class="table table-light table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>${{ "%.2f"|format(order.total) }}</td>
+                <td>
+  <a href="{{ url_for('order_detail', order_id=order.id) }}">
+    View
+  </a>
+</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You have no orders yet.</p>
+    {% endif %}
+    <a href="{{url_for('logout')}}">Logout</a>
+</div>
+{% endblock %}

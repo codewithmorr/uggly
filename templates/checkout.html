@@ -34,23 +34,23 @@
             <td>
                 <div class="qty-controls">
 <!-- minus -->
-                    <a class="qty-btn" href="{{url_for('decrease_cart', product_id= item.id)}}" class="btn btn-sm">-</a>
-                    <span>{{ item.quantity }}</span>
+                    <a class="qty-btn" href="{{url_for('decrease_cart', product_id= item['id'])}}" class="btn btn-sm">-</a>
+                    <span>{{ item['quantity'] }}</span>
 <!-- plus -->
-                  {% if item.quantity >= item.get('stock', 0) %}
+                  {% if item['quantity'] >= item.get('stock', 0) %}
                 <span>Max</span>
                     {%else%}
-<a class="qty-btn" href="{{url_for('increase_cart', product_id= item.id)}}" class="btn btn-sm">+</a>
+<a class="qty-btn" href="{{url_for('increase_cart', product_id= item['id'])}}" class="btn btn-sm">+</a>
                     {% endif %}
 
 
                 </div>
             </td>
-            <td>{{ item.price }}</td>
-            <td>Kes {{ '%.2f' | format(item.price|float * item.quantity|int) }}</td>
+            <td>{{ item['price'] }}</td>
+            <td>Kes {{ '%.2f' | format(item['price']|float * item['quantity']|int) }}</td>
             <td>
                 <!-- remove -->
-                    <a href="{{url_for('remove_from_cart', product_id= item.id)}}" class="btn btn-sm btn-outline-danger ms-3">Remove</a>
+                    <a href="{{url_for('remove_from_cart', product_id= item['id'])}}" class="btn btn-sm btn-outline-danger ms-3">Remove</a>
             </td>
         </tr>
         {% endfor %}

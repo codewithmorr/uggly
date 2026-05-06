@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 import mysql.connector
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'some_secret_key'
@@ -14,7 +15,7 @@ db = mysql.connector.connect(
     database="ninewords"
 )
 cursor = db.cursor(dictionary=True)
-
+db.ping(reconnect=True)
 # -------------------- ROUTES --------------------
 
 @app.route('/')
@@ -40,6 +41,113 @@ def product_detail(product_id):
         abort(404)
 
     return render_template('product_detail.html', product=product)
+# user routes
+# user registration
+@app.route('/register', methods = ["GET", "POST"])
+def register():
+    if request.method =="POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+# hash the password before storage
+        hashed_password = generate_password_hash(password)
+
+        cursor.execute("""
+            INSERT INTO users(username, email, password) VALUES(%s, %s, %s)
+        """, (username, email, hashed_password))
+        db.commit()
+
+        return redirect(url_for("login"))
+    return render_template("register.html")
+
+
+
+# user login
+
+@app.route('/login', methods= ["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+
+
+        if user and check_password_hash(user["password"],password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            return redirect(url_for("home"))
+        else:
+            return "invalid login", 403 
+    return render_template("login.html")
+
+#user logout
+@app.route('/logout') 
+def logout():
+    session.pop("user_id", None)
+    session.pop("username", None)
+    return redirect(url_for("home"))
+
+#user profile
+@app.route('/profile')
+def profile():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+
+    # user information
+    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    #get user orders
+    cursor.execute("SELECT * FROM orders WHERE user_id = %s",
+     (user_id,))
+    orders = cursor.fetchall()
+
+    total_spent = sum(float(o["total"]) for o in orders)
+
+    return render_template("profile.html", user=user, orders=orders, total_spent=total_spent)
+
+# order details
+@app.route('/order/<int:order_id>')
+def order_detail(order_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    # get order
+    cursor.execute("SELECT * FROM orders WHERE id = %s", (order_id,))
+    order = cursor.fetchone()
+
+    # get items
+    cursor.execute("SELECT * FROM order_items WHERE order_id = %s", (order_id,))
+    items = cursor.fetchall()
+    return render_template("order_detail.html", order=order, items=items)
+
+
+@app.route('/profile/edit', methods=["GET", "POST"])
+def edit_profile():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+
+
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+
+        cursor.execute("""
+                       UPDATE users 
+                       SET username = %s , email = %s
+                       WHERE id = %s
+                       """, (username, email, user_id))
+        db.commit()
+        session["username"] = username
+        return redirect(url_for("profile"))
+    
+    cursor.execute("SELECT *FROM users WHERE  id =%s", (user_id,))
+    user = cursor.fetchone()
+
+    return render_template("edit_profile.html", user=user)
+
 
 # admin CRUD routes
 @app.route('/admin/login', methods=["GET","POST"])
@@ -148,6 +256,17 @@ def admin_delete(product_id):
 
     return redirect(url_for("admin_dashboard"))
 
+# admin user view
+@app.route('/admin/users')
+def admin_users():
+    if not is_admin():
+        abort(403)
+
+    cursor.execute("SELECT *FROM users")
+    users = cursor.fetchall()
+
+    return render_template("admin_users.html", users=users)
+
 # -------------------- CART --------------------
 
 @app.route('/add_to_cart/<int:product_id>', methods=["POST"])
@@ -247,7 +366,8 @@ def remove_from_cart(product_id):
 @app.route('/checkout')
 def checkout():
     cart = session.get('cart', [])
-
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
     total = 0
     for item in cart:
         price = float(item.get("price", 0))  # safe access
@@ -266,7 +386,8 @@ def clear_cart():
 @app.route('/confirm', methods=["POST"])
 def confirm_order():
     cart = session.get('cart', [])
-
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
     if not cart:
         return redirect(url_for("shop_page"))
 
@@ -279,12 +400,25 @@ def confirm_order():
     total = sum(float(item["price"]) * int(item["quantity"]) for item in cart)
 
     #  SAVE ORDER
+    user_id = session.get("user_id")
     cursor.execute("""
-        INSERT INTO orders (name, email, phone, total, status)
-        VALUES (%s, %s, %s, %s, %s)
-    """, (name, email, phone, total, "pending"))
+        INSERT INTO orders (user_id, name, email, phone, total, status)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (user_id, name, email, phone, total, "pending"))
 
-    order_id = cursor.lastrowid  
+    order_id = cursor.lastrowid 
+
+    for item in cart:
+        cursor.execute("""
+            INSERT INTO order_items (order_id, product_id,product_name,price, quantity)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (
+            order_id,
+            item["id"],
+            item["name"],
+            item["price"],
+            item["quantity"]
+        ))
 
     #  REDUCE STOCK
     for item in cart:
@@ -329,4 +463,4 @@ def page_not_found(e):
 # -------------------- RUN --------------------
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) 

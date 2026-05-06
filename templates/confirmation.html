@@ -6,23 +6,32 @@
 <div class="container my-5">
     <h1>Order Confirmed</h1>
 
-    <p>Thank you, <strong>{{ name }}</strong>!</p>
+  
 
     <p>Your order has been received and will be processed shortly.</p>
 
     <h3>Order Details</h3>
 
-    <ul>
+    <table class="table table-light table-striped mt-3">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
         {% for item in cart %}
-        <li>
-            {{ item.name }} (x{{ item.quantity }}) - ${{ item.price }}
-        </li>
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>Kes {{ "%.2f"|format(item.price) }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>Kes {{ "%.2f"|format(item.price * item.quantity) }}</td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
 
-    <h4>Delivery Info</h4>
-    <p>Email: {{ email }}</p>
+    
     <p>Address: {{ address }}</p>
+    <p>Thank you, <strong>{{ name }}</strong>!</p>
 
     <p>Payment will be processed via M-Pesa to: <strong>{{ phone }}</strong></p>
 
