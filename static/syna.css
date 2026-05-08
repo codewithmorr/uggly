@@ -70,7 +70,7 @@ nav a:not(:first-child):hover {
         text-shadow: 3px 3px #000;
        }
        p{
-        font-family: 'Staatliches', cursive;
+        font-family: 'Press Start 2P', cursive;
         font-size: 1.2rem;
         margin: 20px 0 40px 0;
         text-shadow: 2px;
@@ -152,7 +152,7 @@ nav a:not(:first-child):hover {
        }
 
        .product-card .price{
-              font-family: 'straatliches', cursive;
+              font-family: 'Press Start 2P', cursive;
               font-size: 1.2rem;
               color: #ff8ba7;
               margin-bottom: 15px;
@@ -387,4 +387,19 @@ nav a:not(:first-child):hover {
     padding: 5px 10px;
     border-radius: 5px;
     text-decoration: none;
+}
+
+.guest-user i {
+    color: red;
+    text-shadow: 0 0 8px red;
+}
+
+.glow {
+    animation: glowPulse 1.2s infinite;
+}
+
+@keyframes glowPulse {
+    0% { text-shadow: 0 0 5px red; }
+    50% { text-shadow: 0 0 15px red; }
+    100% { text-shadow: 0 0 5px red; }
 }

@@ -8,7 +8,7 @@
 
 {% if session.get('username') %}
 <p class="lead " style="font-family: monospace; color: #000000; ">
-      <a href="{{url_for('profile')}}">Hi, {{ session.username }}</a>
+      Hi, {{ session.username }}
 </p> 
 {% else %}
 <p class="lead " style="font-family: monospace; color: #000000; ">
