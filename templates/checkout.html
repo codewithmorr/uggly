@@ -58,9 +58,9 @@
    </table> 
    
     {% else %}
-    <p>Your cart is empty. 
+    <p>Your cart is empty. </p>
         
-        <a href="{{ url_for('shop_page') }}">Continue shopping</a></p>
+       <p> <a href="{{ url_for('shop_page') }}">Continue shopping</a></p>
     {% endif %}
 </div>
 
@@ -74,7 +74,7 @@
         <input type="text" name="name" placeholder="Full Name" class="form-control mb-3" required>
         <input type="email" name="email" placeholder="Email Address" class="form-control mb-3" required>
         <input type="text" name="address" placeholder="Shipping Address" class="form-control mb-3" required>
-        <input type="text" name="phone" placeholder="Phone Number" class="form-control mb-3" required>
+        <input type="text" name="phone" placeholder="254XXXXXXXXX" class="form-control mb-3" required>
 
         <button type="submit" class="btn-retro">Place order</button>
     </form>

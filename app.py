@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
+from mpesa import lipa_na_mpesa
 
 app = Flask(__name__)
 app.secret_key = 'some_secret_key'
@@ -283,7 +284,7 @@ def add_to_cart(product_id):
         return redirect(url_for("shop_page"))
 
     quantity = int(request.form.get("quantity", 1))
-    size = request.form.get("size")
+   
 
     # stock control
     if quantity > product["stock"]:
@@ -294,9 +295,9 @@ def add_to_cart(product_id):
     # convert DB price safely (DECIMAL → float)
     price = float(product["price"])
 
-    # check if already in cart (same id + size)
+    # check if already in cart (same id means same product)
     existing_item = next(
-        (item for item in cart if item["id"] == product_id and item["size"] == size),
+        (item for item in cart if item["id"] == product_id),
         None
     )
 
@@ -375,7 +376,19 @@ def checkout():
         total += price * quantity
     
     return render_template('checkout.html', cart=cart, total=total)
+# payment route
+@app.route('/pay')
+def pay():
 
+    phone = "254799010405"
+    amount = 1
+
+    response = lipa_na_mpesa(phone, amount)
+
+    if response.get("ResponseCode") == "0":
+        return render_template("confirm.html")
+    else:
+        return f"STK FAILED: {response}"
 
 @app.route('/clear_cart')
 def clear_cart():
@@ -397,7 +410,16 @@ def confirm_order():
     address = request.form.get("address")
 
     # calculattion of total
+   
     total = sum(float(item["price"]) * int(item["quantity"]) for item in cart)
+
+    # phone number
+    phone = request.form.get("phone")
+
+    # trigger STK push
+    payment_response = lipa_na_mpesa(phone, int(total))
+
+    print(payment_response)
 
     #  SAVE ORDER
     user_id = session.get("user_id")

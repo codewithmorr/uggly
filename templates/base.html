@@ -27,15 +27,14 @@
     <a href="{{url_for('checkout')}}" class="nav-link"><i class="fa-solid fa-cart-shopping"></i></a>
   </li>
   <a href="{{ url_for('profile') }}" 
-   class="nav-link {% if not session.get('user_id') %}text-danger glow{% endif %}">
+   class="nav-link {% if not session.get('user_id') %}{% endif %}">
     <i class="fa-solid fa-user"></i>
 </a>
-  {% if session.get("admin") %}
-<a href="{{ url_for('admin_dashboard') }}" class="nav-link">
-    <i class="fa-solid fa-user-shield"></i> Admin
+<a href="{{ url_for('admin_login') }}" class="nav-link {% if not session.get('is_admin') %}{% endif %}">
+    <i class="fa-solid fa-user-shield"></i> 
 </a>
 
-{% endif %}
+  
   <li class="nav-item">
     <a href="{{ url_for('logout') }}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i></a>
 </ul>

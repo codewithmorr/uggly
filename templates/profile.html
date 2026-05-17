@@ -10,7 +10,7 @@
     <p>Member since: {{ user.created_at }}</p>
     <hr>
 
-    <h3>Total Spent: ${{ "%.2f"|format(total_spent) }}</h3>
+    <h3>Total Spent: kes {{ "%.2f"|format(total_spent) }}</h3>
 
     <h3 class="mt-4">Your Orders</h3>
 
@@ -29,7 +29,7 @@
             <tr>
                 <td>{{ order.id }}</td>
                 <td>{{ order.created_at }}</td>
-                <td>${{ "%.2f"|format(order.total) }}</td>
+                <td>kes {{ "%.2f"|format(order.total) }}</td>
                 <td>
   <a href="{{ url_for('order_detail', order_id=order.id) }}">
     View
